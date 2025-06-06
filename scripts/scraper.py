@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import os
 from urllib.parse import urljoin
+import re
 
 BASE_URL = "https://books.toscrape.com/"
 
@@ -43,7 +44,7 @@ def scrape_books():
 
             all_books.append({
                 "title": title,
-                "price": float(price),
+                "price": float(re.sub(r"[^\d.]", "", price)),
                 "rating": rating,
                 "availability": availability,
                 "category": category,
