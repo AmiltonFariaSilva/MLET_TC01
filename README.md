@@ -16,10 +16,10 @@ Criar um sistema de web scraping, armazenar os dados em formato estruturado, dis
 
 
 
-🔖 Backlog do Projeto
+# 🔖 Backlog do Projeto
 Este projeto segue um cronograma de atividades para garantir o cumprimento dos entregáveis propostos no Tech Challenge. Abaixo estão as tarefas organizadas por status e prioridade.
 
-✅ Concluídas
+## ✅ Concluídas
  Web scraping dos dados do site books.toscrape.com
 
  Criação da API com endpoints básicos:
@@ -34,7 +34,7 @@ Este projeto segue um cronograma de atividades para garantir o cumprimento dos e
 
 /api/v1/health
 
-🚧 Em Progresso
+## 🚧 Em Progresso
  Organização do repositório (scripts/, api/, data/, etc.)
 
  Estruturação do README.md com:
