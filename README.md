@@ -46,14 +46,14 @@ Este projeto segue um cronograma de atividades para garantir o cumprimento dos e
    ### Exemplo de requests/responses
 
 # 📋 A Fazer
-## 🎯 Entregáveis obrigatórios
+## 🎯 Entregáveis obrigatórios - Telles
  Criar diagrama da arquitetura do pipeline (scraping → processamento → API → consumo)
 
  Deploy da API em ambiente público (Heroku, Render, etc.)
 
  Criar vídeo de apresentação (3 a 12 minutos)
 
-## 🔍 Endpoints adicionais (Insights)
+## 🔍 Endpoints adicionais (Insights) - Zago
  /api/v1/stats/overview
 
  /api/v1/stats/categories
@@ -62,7 +62,7 @@ Este projeto segue um cronograma de atividades para garantir o cumprimento dos e
 
  /api/v1/books/price-range?min={min}&max={max}
 
-## 🔐 Autenticação com JWT (Bônus)
+## 🔐 Autenticação com JWT (Bônus) - Zago
  POST /api/v1/auth/login
 
  POST /api/v1/auth/refresh
