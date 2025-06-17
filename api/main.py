@@ -39,7 +39,7 @@ except Exception as e:
 # Endpoints obrigatórios
 
 @app.get("/")
-def root(): 
+async def root(): 
     """
     Mensagem inicial da api 
     
@@ -136,6 +136,59 @@ async def list_titles_top_rated(limit: int = 10):
     top_books = df_books.sort_values(by="rating", ascending = False).head(limit)
     return top_books["title"].tolist()
 
+@app.get("/api/v1/books/price-range")
+async def price_range(min: float, max: float):
+    """
+    Retorna livros cujo preço está dentro de um intervalo
+    
+    Parameters
+    ----------
+    min: float 
+        Preço mínimo
+    max: float 
+        Preço máximo
+    Returns 
+    -------
+    Lista de livros com preços no intervalo [min, max]
+    """
+    filtered = df_books[(df_books["price"]>= min) & (df_books["price"]<=max)]
+    return filtered["title"].tolist()
+
+@app.get("/api/v1/stats/overview")
+async def collection_statistics():
+    """
+    Retorna estatísticas gerais da coleção
+    
+    Returns
+    -------
+    dicionário com as estatísticas 
+    """
+    total_books = len(df_books)
+    avg_price = round(df_books["price"].mean(), 2)
+    rating_distribution = df_books["rating"].value_counts().sort_index().to_dict()
+    
+    return {
+        "total_livros": total_books, 
+        "preço_medio": avg_price, 
+        "distribuição_ratings": rating_distribution
+    }
+
+@app.get("/api/v1/stats/categories")
+async def category_statistics(): 
+    """
+    Retorna estatísticas detalhadas por categoria 
+    
+    Returns
+    -------
+    dicionário com as estatísticas
+    """
+    grouped = df_books.groupby("category").agg(
+        total_livros=("title", "count"), 
+        preco_medio=("price", "mean"), 
+        preco_minimo=("price", "min"),
+        preco_maximo=("price", "max")
+    ).round(2)
+    return grouped.reset_index().to_dict(orient="records")
 
 @app.get("/api/v1/books/{book_id}")
 async def get_book(book_id: int):
