@@ -1,7 +1,10 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi import status
 from typing import Optional
 import pandas as pd
+from pathlib import Path
 
 app = FastAPI(
     title="BookScraper API",
@@ -18,39 +21,96 @@ app.add_middleware(
 )
 
 # Carregar os dados do CSV
-BOOKS_CSV_PATH = "data/books.csv"
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+BOOKS_CSV_PATH =  PROJECT_ROOT/ "data" / "books.csv"
+
 try:
     df_books = pd.read_csv(BOOKS_CSV_PATH)
+    df_books.set_index("id", inplace=True)
+    books_dict = df_books.to_dict(orient="index")
+     
 except Exception as e:
     print(f"Erro ao carregar o CSV: {e}")
     df_books = pd.DataFrame()
+    books_dict = {}
 
-# Converte dataframe em dicionário com id como chave (opcional)
-df_books.set_index("id", inplace=True)
-books_dict = df_books.to_dict(orient="index")
 
 # Endpoints obrigatórios
 
+@app.get("/")
+def root(): 
+    """
+    Mensagem inicial da api 
+    
+    Returns 
+    -------
+    Um dicionário com a mensagem 
+    """
+    return {"message": "Bem vindo , Acesse /docs para a documentação"}
+
+
 @app.get("/api/v1/health")
-def health_check():
-    return {"status": "ok"}
-
+async def health_check(): 
+    """
+    Verifica status da api e conectividade com os dados 
+    
+    Returns
+    ---------
+    JSONResponse 
+        Um dicionário json com o status da api e mensagem
+    """
+    try: 
+        if not BOOKS_CSV_PATH.exists():
+            return JSONResponse(
+                content = {"status_code":status.HTTP_503_SERVICE_UNAVAILABLE, "message": "Arquivo 'books.csv' não encontrado"}
+            )
+        return JSONResponse(
+            content = {"status_code": status.HTTP_200_OK, "message": "API funcional"}
+        )
+    except Exception as e:
+        return JSONResponse(
+            content = {"status_code": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": str(e)}
+        )
+            
+        
 @app.get("/api/v1/books")
-def list_books():
-    return list(books_dict.values())
-
-@app.get("/api/v1/books/{book_id}")
-def get_book(book_id: int):
-    book = books_dict.get(book_id)
-    if not book:
-        raise HTTPException(status_code=404, detail="Livro não encontrado")
-    return book
+async def list_books():
+    """
+    Lista todos os livros disponíveis na base de dados
+    
+    Returns
+    -------
+     Uma lista com todos os livros disponíveis
+    """
+    return [book["title"] for book in df_books.to_dict(orient="records") if "title" in book]
 
 @app.get("/api/v1/books/search")
-def search_books(
+async def search_books(
     title: Optional[str] = Query(None, description="Título parcial"),
     category: Optional[str] = Query(None, description="Categoria do livro")
 ):
+    """
+        Pesquisa livros com base no título e/ou categoria.
+
+    Este endpoint permite filtrar os livros disponíveis com base em uma correspondência parcial
+    no título e/ou na categoria. A busca é case-insensitive.
+
+    Parâmetros
+    ----------
+    title : Optional[str]
+        Título parcial do livro a ser pesquisado. Se fornecido, o resultado incluirá
+        apenas livros cujo título contenha esse valor.
+    category : Optional[str]
+        Categoria do livro a ser filtrada. Se fornecido, o resultado incluirá
+        apenas livros dessa categoria.
+
+    Retorno
+    -------
+    List[dict]
+        Uma lista de dicionários representando os livros que correspondem aos critérios de busca.
+        Cada dicionário contém os campos do DataFrame original.
+    """
     filtered = df_books
     if title:
         filtered = filtered[filtered["title"].str.contains(title, case=False, na=False)]
@@ -58,6 +118,59 @@ def search_books(
         filtered = filtered[filtered["category"].str.contains(category, case=False, na=False)]
     return filtered.to_dict(orient="records")
 
+@app.get("/api/v1/books/top-rated")
+async def list_titles_top_rated(limit: int = 10):
+    """ 
+    Retorna os títulos melhores rankeados
+    
+    Parameters
+    ----------
+    limit: int 
+        Número máximo de livros a retornar (default = 10)
+    
+    Returns 
+    -------
+    Lista com os títulos dos livros mais bem avaliados 
+    """
+    
+    top_books = df_books.sort_values(by="rating", ascending = False).head(limit)
+    return top_books["title"].tolist()
+
+
+@app.get("/api/v1/books/{book_id}")
+async def get_book(book_id: int):
+    """
+    Retorna detalhes completos de um livro específico pelo ID
+    
+    Parameters 
+    ----------
+    book_id : int 
+        Id do livro 
+    Raises 
+    ------
+    HTTPException 
+        Se o id não encontrado na base de dados 
+    
+    Returns 
+    -------
+    Um dicionário contendo todas as informações do livro 
+    """
+    book = books_dict.get(book_id)
+    if not book:
+        raise HTTPException(status_code=404, detail="Livro não encontrado")
+    return book
+
+
+
 @app.get("/api/v1/categories")
-def list_categories():
+async def list_categories():
+    """
+    Lista todas as categorias de livros disponíveis
+    
+    Returns 
+    -------
+    Uma lista contendo todas as categorias disponíveis
+    """
     return sorted(df_books["category"].unique().tolist())
+
+
