@@ -89,3 +89,8 @@ O prazo final para entrega está no plano da fase.
 Adicionar comprovante de conclusão do curso GenAI (opcional, vale 10 pontos extras).
 
 Cada membro do time pode assumir tarefas e marcar com seu nome no PR ou neste backlog.
+
+####para execução:
+   - .\venv\Scripts\activate 
+   - pip install -r requirements.txt  
+   - uvicorn app.main:app --reload    
