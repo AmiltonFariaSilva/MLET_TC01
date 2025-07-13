@@ -1,32 +1,18 @@
-import sys
 from pathlib import Path
-
-sys.path.append(str(Path(__file__).resolve().parents[1]))
-
-from ast import Yield
-from fastapi import FastAPI, HTTPException, Query, Depends
+from fastapi import HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from models import Books,Base
+from sqlalchemy import func
+from models import Books, Base
 from starlette import status
 from typing import Optional, Annotated
-import models
-from database import session_local
+from database import session_local, engine
+from routers.auth import get_current_user, router as auth_router
+from fastapi.routing import APIRouter
+Base.metadata.create_all(bind=engine)
 
-app = FastAPI(
-    title="BookScraper API",
-    version="1.0.0",
-    description="API para servir dados raspados do site Books to Scrape"
-)
-
-# CORS Middleware (opcional para consumo externo)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+router = APIRouter()
 
 # Carregar os dados do CSV
 
@@ -42,7 +28,7 @@ def get_db():
         
 db_dependency = Annotated[Session, Depends(get_db)]
 
-@app.get("/")
+@router.get("/")
 async def root(): 
     """
     Mensagem inicial da api 
@@ -54,7 +40,7 @@ async def root():
     return {"message": "Bem vindo , Acesse /docs para a documentação"}
 
 
-@app.get("/api/v1/health")
+@router.get("/api/v1/health")
 async def health_check(db:db_dependency): 
     """
     Verifica status da api e conectividade com os dados 
@@ -79,7 +65,7 @@ async def health_check(db:db_dependency):
         )
             
         
-@app.get("/api/v1/books", status_code = status.HTTP_200_OK)
+@router.get("/api/v1/books", status_code = status.HTTP_200_OK)
 async def list_books(db:db_dependency):
     """
     Lista todos os livros disponíveis na base de dados
@@ -91,7 +77,7 @@ async def list_books(db:db_dependency):
     return db.query(Books).filter(Books.title).all()
     # return [book["title"] for book in df_books.to_dict(orient="records") if "title" in book]
 
-@app.get("/api/v1/books/search")
+@router.get("/api/v1/books/search")
 async def search_books(
     db: db_dependency, 
     title: Optional[str] = Query(None, description="Título parcial"),
@@ -126,7 +112,7 @@ async def search_books(
     results = query.all()
     return [book.__dict__ for book in results]
 
-@app.get("/api/v1/books/top-rated")
+@router.get("/api/v1/books/top-rated")
 async def list_titles_top_rated(db: db_dependency, limit: int = 10):
     """ 
     Retorna os títulos melhores rankeados
@@ -149,8 +135,9 @@ async def list_titles_top_rated(db: db_dependency, limit: int = 10):
     )
     return [book.title for book in top_books]
 
-@app.get("/api/v1/books/price-range")
-async def price_range(db:db_dependency, min: float, max: float):
+@router.get("/api/v1/books/price-range")
+async def price_range(current_user: Annotated[dict, Depends(get_current_user)], 
+                      db:db_dependency, min: float, max: float):
     """
     Retorna livros cujo preço está dentro de um intervalo
     
@@ -171,7 +158,7 @@ async def price_range(db:db_dependency, min: float, max: float):
     )
     return [book.title for book in filtered]
 
-@app.get("/api/v1/stats/overview")
+@router.get("/api/v1/stats/overview")
 async def collection_statistics(db: db_dependency):
     """
     Retorna estatísticas gerais da coleção
@@ -201,7 +188,7 @@ async def collection_statistics(db: db_dependency):
         "distribuição_ratings": rating_distribution
     }
 
-@app.get("/api/v1/stats/categories")
+@router.get("/api/v1/stats/categories")
 async def category_statistics(db: db_dependency):
     """
     Retorna estatísticas detalhadas por categoria 
@@ -235,7 +222,7 @@ async def category_statistics(db: db_dependency):
         for row in results
     ]
 
-@app.get("/api/v1/books/{book_id}")
+@router.get("/api/v1/books/{book_id}")
 async def get_book(db: db_dependency, book_id: int):
     """
     Retorna detalhes completos de um livro específico pelo ID
@@ -259,7 +246,7 @@ async def get_book(db: db_dependency, book_id: int):
     raise HTTPException(status_code=404, detail="Livro não encontrado")
     
 
-@app.get("/api/v1/categories")
+@router.get("/api/v1/categories")
 async def list_categories(db:db_dependency):
     """
     Lista todas as categorias de livros disponíveis
@@ -270,5 +257,9 @@ async def list_categories(db:db_dependency):
     """
     categories = db.query(Books.category).distinct().all()
     return [category[0] for category in categories]
+
+
+
+
 
 
