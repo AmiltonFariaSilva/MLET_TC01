@@ -1,0 +1,98 @@
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 🌐 Ambientes virtuais
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+
+
+#  Arquivos de ambiente
+.env
+.env.*
+.env.docker
+.env.local
+.env.production
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Testes
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+
+
+# Backups e temporários
+*.backup
+*.bak
+*.old
+*.tmp
+*.temp
+.temp/
+tmp/
+
+# 🔧 Ferramentas de desenvolvimento
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+#  Node.js (se houver frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+#  Deploy e CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+#  Documentação gerada
+docs/_build/
+site/
+
+#  Específicos do projeto
+MONITORING_ANALYTICS_GUIDE.md
+SNOWFLAKE_MIGRATION_GUIDE.md
+DOCKER_GUIDE.md
+Backlog.md
