@@ -1,6 +1,0 @@
-fastapi
-uvicorn
-pandas
-beautifulsoup4
-requests
-pytest

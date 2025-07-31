@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -7,6 +8,9 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 import os
 from dotenv import load_dotenv
+import models 
+from routers import auth, src
+from database import Base, engine
 
 # Carrega variáveis de ambiente
 load_dotenv("C:/Users/anny/Documents/MLTE/credenciais.env")
@@ -16,6 +20,12 @@ app = FastAPI(
     version="1.0.0",
     description="API para servir dados do Snowflake"
 )
+
+
+Base.metadata.create_all(bind=engine)
+
+app.include_router(auth.router)
+app.include_router(src.router)
 
 # Configuração CORS
 app.add_middleware(
@@ -221,3 +231,4 @@ async def list_categories():
     Uma lista contendo todas as categorias disponíveis
     """
     return sorted(df_books["category"].unique().tolist())
+
