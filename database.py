@@ -11,13 +11,17 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 
 # URL de conexão com o banco de dados
 # No container, usamos o hostname do serviço docker-compose: "mlet_tc01_database"
-user='amilton_faria',
-password='Engenharia2025$'
-account='ZAPPZJT-RCB40816'
+user = "amilton_faria"
+password = "Engenharia2025$"
+account = "zappzjt-rcb40816"
+database = "DB_SCRAPE"     # substitua pelo nome real
+schema = "SC_SCRAPE"         # ou o schema que você usa
+warehouse = "COMPUTE_WH"  # ou outro warehouse
+role = "ROLE_BOOKS_SCRAPE"     # opcional, mas pode ser importante
 
 SQLALCHEMY_DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    f"ZAPPZJT-RCB40816.snowflakecomputing.com://{user}:{password}@{account}"
+    f"snowflake://{user}:{password}@{account}/{database}/{schema}?warehouse={warehouse}&role={role}"
 )
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
