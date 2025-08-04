@@ -76,6 +76,9 @@ tmp/
 .dmypy.json
 dmypy.json
 
+#logs
+logs/*
+
 #  Node.js (se houver frontend)
 node_modules/
 npm-debug.log*
