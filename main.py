@@ -14,7 +14,7 @@ load_dotenv("C:/Users/anny/Documents/MLTE/credenciais.env")
 app = FastAPI(
     title="BookScraper API",
     version="1.0.0",
-    description="API para servir dados do Snowflake"
+    description="API para servir dados raspados do Snowflake"
 )
 
 # Configuração CORS
