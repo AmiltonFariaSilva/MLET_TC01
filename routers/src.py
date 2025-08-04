@@ -11,7 +11,7 @@ from database import session_local, engine
 from routers.auth import get_current_user, router as auth_router
 from fastapi.routing import APIRouter
 
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
 
