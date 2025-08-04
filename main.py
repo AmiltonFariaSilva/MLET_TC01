@@ -7,13 +7,12 @@ from typing import Optional
 import pandas as pd
 from sqlalchemy import create_engine, text
 import os
-from dotenv import load_dotenv
 import models 
 from routers import auth, src
 from database import Base, engine
 
 # Carrega variáveis de ambiente
-load_dotenv("C:/Users/anny/Documents/MLTE/credenciais.env")
+#load_dotenv("C:/Users/anny/Documents/MLTE/credenciais.env")
 
 app = FastAPI(
     title="BookScraper API",

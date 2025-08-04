@@ -1,24 +1,92 @@
+version: '3.8'
+
 services:
   mlet_tc01_database:
-    image: postgres 
+    image: postgres:13
+    container_name: mlet_tc01_database
     environment:
-      POSTGRES_USER: app_user 
-      POSTGRES_DB: app_db 
+      POSTGRES_USER: app_user
+      POSTGRES_DB: app_db
       POSTGRES_PASSWORD: app_password
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
   mlet_tc01_app:
     image: mlet_tc01_app
-    build: . 
-    ports: 
+    build: .
+    container_name: mlet_tc01_app
+    ports:
       - "8000:8000"
     depends_on:
       - mlet_tc01_database
     environment:
       DATABASE_URL: postgresql+psycopg2://app_user:app_password@mlet_tc01_database:5432/app_db
 
-volumes:
-  pgdata: 
+  mlet_tc01_airflow_db:
+    image: postgres:13
+    container_name: mlet_tc01_airflow_db
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_DB: airflow
+      POSTGRES_PASSWORD: airflow
+    volumes:
+      - airflow_pgdata:/var/lib/postgresql/data
 
+  airflow-webserver:
+    image: apache/airflow:2.9.0-python3.10
+    container_name: airflow-webserver
+    restart: always
+    depends_on:
+      - mlet_tc01_airflow_db
+    environment:
+      AIRFLOW__WEBSERVER__SECRET_KEY: this_is_a_very_secret_key
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@mlet_tc01_airflow_db:5432/airflow
+      AIRFLOW__CORE__FERNET_KEY: ''
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    volumes:
+      - .:/opt/airflow/project 
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./scripts:/opt/airflow/scripts
+      - ./data:/opt/airflow/data
+      - ./requirements.txt:/requirements.txt
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "
+        pip install -r /requirements.txt &&
+        airflow db init &&
+        airflow users create --username admin --password admin --firstname Amilton --lastname Admin --role Admin --email admin@example.com &&
+        airflow webserver
+      "
+
+  airflow-scheduler:
+    image: apache/airflow:2.9.0-python3.10
+    container_name: airflow-scheduler
+    restart: always
+    depends_on:
+      - airflow-webserver
+    environment:
+      AIRFLOW__WEBSERVER__SECRET_KEY: this_is_a_very_secret_key
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@mlet_tc01_airflow_db:5432/airflow
+    volumes:
+      - .:/opt/airflow/project         # <- também monta na instância do scheduler
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./scripts:/opt/airflow/scripts
+      - ./data:/opt/airflow/data
+      - ./requirements.txt:/requirements.txt
+    command: >
+      bash -c "
+        pip install -r /requirements.txt &&
+        airflow scheduler
+      "
+
+volumes:
+  pgdata:
+  airflow_pgdata:
