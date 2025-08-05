@@ -111,8 +111,15 @@ O resultado da função Lambda é um arquivo csv no S3
 
 1. **Ingestão:**
 
+A ingestão no snowflake é realizada por uma feature chamada SNOWPIPE.
 
+Essa feature tem por objetivo carregar dados de um S3, assim que recever um evento do mesmo, para uma tabela no Snowflake
 
+---
+
+## 🎥 Apresentação
+
+[🔗 Link para vídeo de apresentação (inserir link quando disponível)]
 
 
 ---
@@ -187,14 +194,6 @@ O projeto conta com esteira de CI/CD estruturada para deploy automático:
 2. GitHub Actions executa CI com testes e validações
 3. Deploy automático em ambiente de **staging (AWS Lambda)**
 4. Deploy final em **produção (Render)**
-
-
-
----
-
-## 🎥 Apresentação
-
-[🔗 Link para vídeo de apresentação (inserir link quando disponível)]
 
 ---
 
