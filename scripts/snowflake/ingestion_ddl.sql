@@ -1,0 +1,89 @@
+--Cria uma integração de armazenamento para o AWS S3
+CREATE OR REPLACE STORAGE INTEGRATION aws_s3_integration
+    TYPE = EXTERNAL_STAGE
+    STORAGE_PROVIDER = S3
+    ENABLED = TRUE
+    STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::04762058988:role/fiap-scraper-role'
+    STORAGE_ALLOWED_LOCATIONS = ('s3://fiapscraper/');
+
+--Cria um stage para acessar os arquivos no S3
+CREATE OR REPLACE STAGE DB_SCRAPE.SC_SCRAPE.STG_BOOKS_TO_SCRAPE
+    URL = 's3://fiapscraper/'
+    STORAGE_INTEGRATION = aws_s3_integration
+    FILE_FORMAT = (TYPE = 'CSV' FIELD_DELIMITER = ',' SKIP_HEADER = 0);
+
+--Descreve a integração criada
+DESC INTEGRATION aws_s3_integration;
+
+--Descreve o stage criado
+DESC STAGE DB_SCRAPE.SC_SCRAPE.STG_BOOKS_TO_SCRAPE;
+
+--Cria um formato de arquivo CSV
+CREATE OR REPLACE FILE FORMAT DB_SCRAPE.SC_SCRAPE.CSV_FILEFORMAT
+    TYPE = CSV
+    FIELD_DELIMITER = ','
+    FIELD_OPTIONALLY_ENCLOSED_BY = '"'
+    SKIP_HEADER = 1;
+
+--Retoma a execução do warehouse
+ALTER WAREHOUSE COMPUTE_WH RESUME;
+
+--Lista os arquivos no stage
+LIST @DB_SCRAPE.SC_SCRAPE.STG_BOOKS_TO_SCRAPE;
+
+
+--Cria um pipe com ingestão automática
+CREATE OR REPLACE PIPE DB_SCRAPE.SC_SCRAPE.PIPE_BOOKS_TO_SCRAPE_AUTO 
+    AUTO_INGEST = TRUE
+    AS
+    COPY INTO DB_SCRAPE.SC_SCRAPE.TB_BOOKS_TO_SCRAPE (
+        ID,
+        TITLE,
+        PRICE,
+        RATING,
+        AVAILABILITY,
+        CATEGORY,
+        IMAGE_URL,
+        METADATA_FILENAME,
+        LOAD_TIMESTAMP
+    )
+    FROM (
+        SELECT 
+            t.$1,
+            t.$2,
+            t.$3,
+            t.$4,
+            t.$5,
+            t.$6,
+            t.$7,
+            METADATA$FILENAME,
+            CURRENT_TIMESTAMP()
+        FROM @DB_SCRAPE.SC_SCRAPE.STG_BOOKS_TO_SCRAPE t
+    )
+    PATTERN = '.*books.*\.csv'
+    FILE_FORMAT = 'DB_SCRAPE.SC_SCRAPE.CSV_FILEFORMAT'
+    ON_ERROR = 'CONTINUE';
+
+--Mostra os pipes existentes
+SHOW PIPES;
+
+--Verifica o status do pipe automático
+SELECT SYSTEM$PIPE_STATUS('PIPE_BOOKS_TO_SCRAPE_AUTO');
+
+--Concede permissões ao role ROLE_BOOKS_SCRAPE
+GRANT USAGE ON DATABASE DB_SCRAPE TO ROLE ROLE_BOOKS_SCRAPE;
+GRANT USAGE ON SCHEMA DB_SCRAPE.SC_SCRAPE TO ROLE ROLE_BOOKS_SCRAPE;
+GRANT USAGE ON STAGE DB_SCRAPE.SC_SCRAPE.STG_BOOKS_TO_SCRAPE TO ROLE ROLE_BOOKS_SCRAPE;
+GRANT OPERATE ON PIPE DB_SCRAPE.SC_SCRAPE.PIPE_BOOKS_TO_SCRAPE TO ROLE ROLE_BOOKS_SCRAPE;
+GRANT MONITOR ON PIPE DB_SCRAPE.SC_SCRAPE.PIPE_BOOKS_TO_SCRAPE TO ROLE ROLE_BOOKS_SCRAPE;
+
+--Consulta o histórico de cópia da última hora
+SELECT *
+FROM TABLE(INFORMATION_SCHEMA.COPY_HISTORY(
+    TABLE_NAME => 'TB_BOOKS_TO_SCRAPE',
+    START_TIME => DATEADD(HOURS, -1, CURRENT_TIMESTAMP())
+));
+
+--Seleciona todos os registros da tabela
+SELECT *
+FROM DB_SCRAPE.SC_SCRAPE.TB_BOOKS_TO_SCRAPE;
