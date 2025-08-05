@@ -14,6 +14,14 @@ O desafio propõe a criação de um pipeline de dados com web scraping, transfor
 - Preparar a solução para futuros usos em projetos de ML.
 - Publicar a solução em ambiente de produção com esteira CI/CD.
 
+## 🧩 Arquitetura da Solução
+
+![Arquitetura da Solução](Insumos/Arquitetura%20da%20solução.jpg)
+
+## 🚀 Processo de Deploy
+
+![Fluxo de Deploy](Insumos/fluxo_de_deploy.jpg)
+
 ---
 
 ## 🗂 Estrutura do Repositório
