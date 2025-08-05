@@ -113,6 +113,31 @@ Essa implementação garante segurança básica para administração da API e co
 
 ---
 
+## 🧩 AWS
+
+1. **Ingestão:**
+
+A ingestão é realizada por uma lambda function que pode ser disparada manualmente ou via Schedule atraves do AWS Event Bridge(crontab)
+A Lambda function realiza o scraping da informações de livros do site https://books.toscrape.com/
+
+![Lambda_1](Insumos/Lambda_screen1.png)
+![Lambda_3](Insumos/Lambda_screen2.png)
+
+
+O resultado da função é um arquivo no S3 
+
+
+
+
+
+
+
+
+
+
+
+---
+
 ## 🧩 Arquitetura da Solução
 
 ### 🔧 Visão Geral
