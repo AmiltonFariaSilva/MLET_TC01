@@ -49,42 +49,6 @@ MLET_TC01/
 └── README.md             # Este arquivo
 ```
 
----
-
-## ⚙️ Como Executar Localmente
-
-1. **Clone o projeto:**
-```bash
-git clone https://github.com/seuusuario/MLET_TC01.git
-cd MLET_TC01
-```
-
-2. **Crie e ative o ambiente virtual:**
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-venv\Scripts\activate     # Windows
-```
-
-3. **Instale as dependências:**
-```bash
-pip install -r requirements.txt
-```
-
-4. **Execute o scraping:**
-```bash
-python scripts/scraper.py
-```
-
-5. **Ingestão dos dados no banco:**
-```bash
-python ingest_data.py
-```
-
-6. **Execute a API localmente:**
-```bash
-uvicorn api.main:app --reload
-```
 
 ---
 
@@ -149,6 +113,42 @@ O resultado da função Lambda é um arquivo csv no S3
 
 
 
+---
+
+## ⚙️ Como Executar Localmente
+
+1. **Clone o projeto:**
+```bash
+git clone https://github.com/seuusuario/MLET_TC01.git
+cd MLET_TC01
+```
+
+2. **Crie e ative o ambiente virtual:**
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+venv\Scripts\activate     # Windows
+```
+
+3. **Instale as dependências:**
+```bash
+pip install -r requirements.txt
+```
+
+4. **Execute o scraping:**
+```bash
+python scripts/scraper.py
+```
+
+5. **Ingestão dos dados no banco:**
+```bash
+python ingest_data.py
+```
+
+6. **Execute a API localmente:**
+```bash
+uvicorn api.main:app --reload
+```
 
 
 ---
