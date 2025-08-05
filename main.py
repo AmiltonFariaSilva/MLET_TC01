@@ -7,12 +7,9 @@ from typing import Optional
 import pandas as pd
 from sqlalchemy import create_engine, text
 import os
-import models 
-from routers import auth, src
+import models as models 
+from routers import auth, src, ml
 from database import Base, engine
-
-# Carrega variáveis de ambiente
-#load_dotenv("C:/Users/anny/Documents/MLTE/credenciais.env")
 
 app = FastAPI(
     title="BookScraper API",
@@ -20,8 +17,6 @@ app = FastAPI(
     description="API para servir dados do Snowflake"
 )
 
-
-#Base.metadata.create_all(bind=engine)
-
 app.include_router(auth.router)
 app.include_router(src.router)
+app.include_router(ml.router)
