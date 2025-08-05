@@ -23,6 +23,24 @@ O desafio propõe a criação de um pipeline de dados com web scraping, transfor
 - Dados estruturados para ML
 - Deploy público disponível
 
+
+---
+## 📌 Tecnologias envoldidas
+
+- Python
+    Utilizado para criar o codigo do webscraping
+
+- AWS
+    Utilizado para automatizar o scraping via Lambda Function e armazenar os resultados em S3
+
+- Snowflake
+    Utilizado para integrar com o S3 e fazer a ingestão na tabela final do banco de dados de maneira estruturada
+
+- Plataforma Render
+    Utilizado para expor a API e rotas que irão consumir os dados do Snowflake
+
+
+
 ---
 
 ## 🧩 Arquitetura da Solução
