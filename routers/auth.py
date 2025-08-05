@@ -11,8 +11,8 @@ from jose import jwt, JWTError
 from datetime import timedelta, datetime, timezone
 
 router = APIRouter(
-    prefix = '/auth', 
-    tags = ['auth']
+    prefix = '/Auth', 
+    tags = ['Auth']
 )
 
 SECRET_KEY = "long_string"

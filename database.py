@@ -3,8 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from pathlib import Path
 from sqlalchemy import create_engine
-
-
+from sqlalchemy.orm import Session
 
 # Diretório raiz do projeto
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -27,3 +26,11 @@ SQLALCHEMY_DATABASE_URL = os.getenv(
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+
+def get_db():
+    db = session_local()
+    try:
+        yield db
+    finally:
+        db.close()

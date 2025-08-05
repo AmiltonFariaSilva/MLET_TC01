@@ -41,7 +41,7 @@ async def root():
     -------
     Um dicionário com a mensagem
     """
-    return {"message": "Bem vindo , Acesse /docs para a documentação"}
+    return {"message": "Bem-vindo à API de Livros 📚! Acesse a documentação interativa em /docs"}
 
 
 @router.get("/api/v1/health")
