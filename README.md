@@ -78,6 +78,25 @@ uvicorn api.main:app --reload
 - `GET /api/v1/categories` – Lista de categorias
 - `GET /api/v1/health` – Verifica status da API
 
+## 🔐 Autenticação com JWT
+
+O projeto conta com autenticação implementada usando **JWT (JSON Web Tokens)**.
+
+### Rotas de autenticação:
+
+- `POST /api/v1/auth/login` – Realiza o login e retorna um token JWT.
+- `POST /api/v1/auth/refresh` – Gera um novo token com base no token de refresh.
+
+### Endpoints protegidos
+
+- Endpoints sensíveis como `/api/v1/scraping/trigger` estão protegidos e exigem um token válido.
+- Para acessar esses endpoints, inclua o header:
+```
+Authorization: Bearer <seu_token>
+```
+
+Essa implementação garante segurança básica para administração da API e controle de acesso às operações críticas.
+
 ### Insights (opcional)
 - `GET /api/v1/stats/overview` – Estatísticas gerais
 - `GET /api/v1/stats/categories` – Estatísticas por categoria
