@@ -22,6 +22,17 @@ O desafio propõe a criação de um pipeline de dados com web scraping, transfor
 
 ![Fluxo de Deploy](Insumos/fluxo_de_deploy.jpg)
 
+
+---
+
+## 📌 Premissas Atendidas
+
+- Pipeline completo de dados
+- API REST funcional
+- Web scraping robusto
+- Dados estruturados para ML
+- Deploy público disponível
+
 ---
 
 ## 🗂 Estrutura do Repositório
@@ -121,14 +132,18 @@ A ingestão é realizada por uma lambda function que pode ser disparada manualme
 A Lambda function realiza o scraping da informações de livros do site https://books.toscrape.com/
 
 ![Lambda_1](Insumos/Lambda_screen1.png)
-![Lambda_3](Insumos/Lambda_screen2.png)
+![Lambda_2](Insumos/Lambda_screen2.png)
+
+2. **Armazenamento:**
+
+O resultado da função Lambda é um arquivo csv no S3  
+
+![s3csv](Insumos/S3CSV.png)
 
 
-O resultado da função é um arquivo no S3 
+## 🧩 SNOWFLAKE
 
-
-
-
+1. **Ingestão:**
 
 
 
@@ -138,7 +153,7 @@ O resultado da função é um arquivo no S3
 
 ---
 
-## 🧩 Arquitetura da Solução
+## 🧩 Arquitetura da Solução - ACHO QUE PODEMOS REMOVER ESSA PARTE - DUPLICIDADE
 
 ### 🔧 Visão Geral
 
@@ -149,7 +164,7 @@ O resultado da função é um arquivo no S3
 +-------------+      +-------------+      +--------------------+      +-------------+
 ```
 
-### 🔁 Etapas do Processo
+### 🔁 Etapas do Processo 
 
 1. **Scraping** dos dados do site [books.toscrape.com](https://books.toscrape.com/)
 2. Armazenamento dos dados em `.csv`
@@ -171,15 +186,7 @@ O projeto conta com esteira de CI/CD estruturada para deploy automático:
 3. Deploy automático em ambiente de **staging (AWS Lambda)**
 4. Deploy final em **produção (Render)**
 
----
 
-## 📌 Premissas Atendidas
-
-- Pipeline completo de dados
-- API REST funcional
-- Web scraping robusto
-- Dados estruturados para ML
-- Deploy público disponível
 
 ---
 
