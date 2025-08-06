@@ -13,7 +13,10 @@ from fastapi.routing import APIRouter
 
 #Base.metadata.create_all(bind=engine)
 
-router = APIRouter()
+router = APIRouter(    
+)
+
+
 
 # Carregar os dados do CSV
 
