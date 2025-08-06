@@ -13,7 +13,10 @@ from fastapi.routing import APIRouter
 
 #Base.metadata.create_all(bind=engine)
 
-router = APIRouter()
+router = APIRouter(    
+)
+
+
 
 # Carregar os dados do CSV
 
@@ -81,7 +84,7 @@ async def list_books(db: db_dependency):
     -------
      Uma lista com todos os livros disponíveis
     """
-    return db.query(Books).filter(Books.title).all()
+    return db.query(Books).all()
     # return [book["title"] for book in df_books.to_dict(orient="records") if "title" in book]
 
 
