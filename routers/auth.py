@@ -95,10 +95,13 @@ async def create_user(db:db_dependency, create_user_request:CreateUserRequest):
         first_name = create_user_request.first_name, 
         last_name = create_user_request.last_name, 
         hashed_password = bcrypt_context.hash(create_user_request.password), 
-        is_active = True
+        is_active = True,
+        role = 'user'  # Define role padrão
     )
     
     db.add(create_user_model)
+    db.flush()  # Força o flush para gerar o ID
+    db.refresh(create_user_model)  # Atualiza o objeto com o ID gerado
     db.commit()
     
 @router.post("/login", response_model=Token)
