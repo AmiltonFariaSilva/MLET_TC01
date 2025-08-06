@@ -27,17 +27,13 @@ O desafio propõe a criação de um pipeline de dados com web scraping, transfor
 ---
 ## 📌 Tecnologias envoldidas
 
-- Python
-    Utilizado para criar o codigo do webscraping
+- Python - utilizado para criar o codigo do webscraping
 
-- AWS
-    Utilizado para automatizar o scraping via Lambda Function e armazenar os resultados em S3
+- AWS - utilizado para automatizar o scraping via Lambda Function e armazenar os resultados em S3
 
-- Snowflake
-    Utilizado para integrar com o S3 e fazer a ingestão na tabela final do banco de dados de maneira estruturada
+- Snowflake - utilizado para integrar com o S3 e fazer a ingestão na tabela final do banco de dados de maneira estruturada
 
-- Plataforma Render
-    Utilizado para expor a API e rotas que irão consumir os dados do Snowflake
+- Plataforma Render - utilizado para expor a API e rotas que irão consumir os dados do Snowflake
 
 
 
