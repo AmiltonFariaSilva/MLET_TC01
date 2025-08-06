@@ -105,6 +105,8 @@ Essa implementação garante segurança básica para administração da API e co
 
 ## 🧩 AWS
 
+A plataforma AWS foi escolhida por fornecer engines escaláveis, facil gerenciamento e baixo custo para o nosso caso de uso
+
 1. **Ingestão:**
 
 A ingestão é realizada por uma lambda function que pode ser disparada manualmente ou via Schedule atraves do AWS Event Bridge(crontab)
@@ -123,14 +125,33 @@ O resultado da função Lambda é um arquivo csv no S3
 
 ## 🧩 SNOWFLAKE
 
+A plataforma de dados Snowflake foi escolhida por fornecer um ambiente de dados escalaveis para requisições das apis, baixo esforço de construção do ambiente e de custo gratuito para o desenvolvimento desse trabalho.
+
 1. **Ingestão:**
 
 A ingestão no snowflake é realizada por uma feature chamada SNOWPIPE.
 
-Essa feature tem por objetivo carregar dados de um S3, assim que recever um evento do mesmo, para uma tabela no Snowflake
+Essa feature tem por objetivo carregar dados de um S3, assim que receber um evento do mesmo, para uma tabela no Snowflake
+
+2. **Armazenamento:**
+
+A tabela no snowflake é chamada TB_BOOKS_TO_SCRAPE e tem o seguinte formato estruturado abaixo
+
+Essa tabela servira de base para o consumo de informação das APIS
+
+![books](Insumos/Tabela_books.png)
 
 ---
 
+## 🧩 RENDER
+
+A plataforma Render foi escolhida pelo time para realizar o deploy das APIs utilizando uma URL publica que permitindo que suas rotas sejam acessadas.
+
+Essa plataforma foi escolhida em virtude do minimo esforço de deploy das APIs, visto que é facilmente integravel com o GITHUB, e por possuir plano gratuito que é suficiente para o caso de uso do nosso trabalho
+
+![Render](Insumos/Render.png)
+
+---
 ## 🎥 Apresentação
 
 [🔗 Link para vídeo de apresentação (inserir link quando disponível)]
