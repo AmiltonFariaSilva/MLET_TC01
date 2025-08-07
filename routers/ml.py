@@ -24,23 +24,34 @@ def get_features(db: Session = Depends(get_db)):
     books = db.query(Books).all()
     features = []
     for book in books:
+        # Se o preço for uma string, removemos o símbolo '£'
+        price = book.price
+        if isinstance(price, str):
+            price = float(price.replace('£', ''))
+        
         features.append({
             "title": book.title,
-            "price": float(book.price.replace('£', '')),
+            "price": price,
             "rating": int(convert_rating(book.rating)),
             "availability": 1 if "In stock" in book.availability else 0,
             "category": book.category
         })
     return features
 
+
 @router.get("/api/v1/ml/training-data")
 def get_training_data(db: Session = Depends(get_db)):
     books = db.query(Books).all()
     data = []
     for book in books:
+        # Verificação e ajuste do preço
+        price = book.price
+        if isinstance(price, str):
+            price = float(price.replace('£', ''))
+        
         data.append({
             "title": book.title,
-            "price": float(book.price.replace('£', '')),
+            "price": price,
             "rating": int(convert_rating(book.rating)),
             "availability": 1 if "In stock" in book.availability else 0,
             "category": book.category,
