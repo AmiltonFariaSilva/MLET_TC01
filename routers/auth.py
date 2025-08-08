@@ -12,7 +12,7 @@ from datetime import timedelta, datetime, timezone
 
 router = APIRouter(
     prefix = '/auth', 
-    tags = ['auth']
+    tags = ['Auth']
 )
 
 SECRET_KEY = "long_string"
