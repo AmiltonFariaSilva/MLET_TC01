@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "json": {
+      "format": "{\"timestamp\":\"%(asctime)s\",\"level\":\"%(levelname)s\",\"logger\":\"%(name)s\",\"message\":\"%(message)s\",\"module\":\"%(module)s\",\"funcName\":\"%(funcName)s\",\"lineno\":\"%(lineno)d\"}",
+      "datefmt": "%Y-%m-%dT%H:%M:%S%z"
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "formatter": "json",
+      "stream": "ext://sys.stdout"
+    }
+  },
+  "loggers": {
+    "uvicorn": {
+      "handlers": [
+        "console"
+      ],
+      "level": "INFO"
+    },
+    "uvicorn.access": {
+      "handlers": [
+        "console"
+      ],
+      "level": "INFO",
+      "propagate": false
+    },
+    "uvicorn.error": {
+      "handlers": [
+        "console"
+      ],
+      "level": "INFO"
+    },
+    "fastapi": {
+      "handlers": [
+        "console"
+      ],
+      "level": "INFO"
+    },
+    "monitoring": {
+      "handlers": [
+        "console"
+      ],
+      "level": "INFO"
+    },
+    "": {
+      "handlers": [
+        "console"
+      ],
+      "level": "INFO"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# --- Monitoring & Metrics ---
+# Add this near your FastAPI app creation:
+#   from monitoring_addon.logging_middleware import RequestLogMiddleware
+#   from prometheus_fastapi_instrumentator import Instrumentator
+#
+#   app.add_middleware(RequestLogMiddleware)
+#   Instrumentator().instrument(app).expose(app, endpoint="/metrics")

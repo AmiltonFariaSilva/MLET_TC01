@@ -12,3 +12,7 @@ bcrypt==4.0.1
 psycopg2-binary
 snowflake-sqlalchemy
 python-dotenv
+prometheus-fastapi-instrumentator>=7.0.0
+prometheus-client>=0.20.0
+streamlit>=1.36.0
+pyarrow<19.0.0
