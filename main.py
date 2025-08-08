@@ -8,7 +8,7 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 import os
 import models as models 
-from routers import auth, src, ml
+from routers import auth, src, ml, optional
 from database import Base, engine
 
 app = FastAPI(
@@ -19,4 +19,5 @@ app = FastAPI(
 
 app.include_router(auth.router)
 app.include_router(src.router)
+app.include_router(optional.router)
 app.include_router(ml.router)
