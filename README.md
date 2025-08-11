@@ -149,7 +149,7 @@ A plataforma Render foi escolhida pelo time para realizar o deploy das APIs util
 
 Essa plataforma foi escolhida em virtude do minimo esforço de deploy das APIs, visto que é facilmente integravel com o GITHUB, e por possuir plano gratuito que é suficiente para o caso de uso do nosso trabalho
 
-As rotas e apis podem ser acessadas na url: zzzzzzzzzzzzzzzzz.com
+As rotas e apis podem ser acessadas na url: 🔗 https://scrap-api-kwuu.onrender.com
 
 
 ![Render](Insumos/Render.png)
@@ -157,7 +157,6 @@ As rotas e apis podem ser acessadas na url: zzzzzzzzzzzzzzzzz.com
 ---
 ## 🎥 Apresentação
 
-[🔗 Link para vídeo de apresentação (inserir link quando disponível)]
-
+🔗 https://www.youtube.com/watch?v=hgaGc_RikiQ
 
 ---
