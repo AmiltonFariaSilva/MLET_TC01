@@ -20,7 +20,7 @@ ALGORITHM = "HS256"
 
 bcrypt_context = CryptContext(schemes = ['bcrypt'], deprecated = 'auto')
 oauth2_bearer = OAuth2PasswordBearer(
-    tokenUrl='Auth/login',
+    tokenUrl='auth/login',
     scheme_name="JWT"
 )
 
@@ -126,7 +126,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
 
 @router.post("/create-user", status_code=status.HTTP_201_CREATED)
 async def create_user(user_request: CreateUserRequest, db: db_dependency):
-    """Criar usuário usando INSERT direto no Snowflake"""
+    """Criar usuário """
     
     # Verificar se usuário já existe
     check_user = db.execute(
