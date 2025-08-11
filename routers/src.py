@@ -14,7 +14,6 @@ from fastapi.routing import APIRouter
 #Base.metadata.create_all(bind=engine)
 
 router = APIRouter(
-    prefix="/api/v1/Default",
     tags=["Default"]
 )
 
@@ -45,7 +44,7 @@ async def root():
     -------
     Um dicionário com a mensagem
     """
-    return {"message": "Bem-vindo à API de Livros 📚! Acesse a documentação interativa em /docs"}
+    return {"message": "Bem-vindo a API de Livros! Acesse a doc interativa em /docs"}
 
 @router.get("/api/v1/books", status_code=status.HTTP_200_OK)
 async def list_books(db: db_dependency):
@@ -58,29 +57,6 @@ async def list_books(db: db_dependency):
     """
     return db.query(Books).all()
     # return [book["title"] for book in df_books.to_dict(orient="records") if "title" in book]
-
-@router.get("/api/v1/books/{book_id}")
-async def get_book(db: db_dependency, book_id: int):
-    """
-    Retorna detalhes completos de um livro específico pelo ID
-
-    Parameters
-    ----------
-    book_id : int
-        Id do livro
-    Raises
-    ------
-    HTTPException
-        Se o id não encontrado na base de dados
-
-    Returns
-    -------
-    Um dicionário contendo todas as informações do livro
-    """
-    id_book = db.query(Books).filter(Books.id == book_id).first()
-    if id_book is not None:
-        return id_book
-    raise HTTPException(status_code=404, detail="Livro não encontrado")
 
 
 @router.get("/api/v1/books/search")
@@ -117,6 +93,30 @@ async def search_books(
         query = query.filter(Books.category.ilike(f"%{category}%"))
     results = query.all()
     return [book.__dict__ for book in results]
+
+
+@router.get("/api/v1/books/{book_id}")
+async def get_book(db: db_dependency, book_id: int):
+    """
+    Retorna detalhes completos de um livro específico pelo ID
+
+    Parameters
+    ----------
+    book_id : int
+        Id do livro
+    Raises
+    ------
+    HTTPException
+        Se o id não encontrado na base de dados
+
+    Returns
+    -------
+    Um dicionário contendo todas as informações do livro
+    """
+    id_book = db.query(Books).filter(Books.id == book_id).first()
+    if id_book is not None:
+        return id_book
+    raise HTTPException(status_code=404, detail="Livro não encontrado")
 
 @router.get("/api/v1/categories")
 async def list_categories(db: db_dependency):
